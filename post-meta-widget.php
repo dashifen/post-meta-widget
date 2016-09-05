@@ -13,6 +13,8 @@ if (!defined('WPINC')) {
 	die;
 }
 
+// TODO: figure out a way to double-check for FontAwesome here
+
 class dashifen_post_meta_widget extends WP_Widget {
 	public function __construct() {
 		$widget = array(
