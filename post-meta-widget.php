@@ -13,8 +13,6 @@ if (!defined('WPINC')) {
 	die;
 }
 
-// TODO: figure out a way to double-check for FontAwesome here
-
 class dashifen_post_meta_widget extends WP_Widget {
 	public function __construct() {
 		$widget = array(
@@ -81,12 +79,24 @@ class dashifen_post_meta_widget extends WP_Widget {
 
 
 			<?php $display = ob_get_clean();
+
+			// the widget is built slightly differently depending on whether or not we have a
+			// custom title.  if we do have a title, then we display it.  otherwise, we want to
+			// set the default title (above) and indicate that the title should be visually
+			// hidden.  additionally, the title is always visually hidden on the homepage.
+
+			$empty_title = strlen($instance["post_meta_title"]) == 0;
+			$title = $empty_title ? "Post Metadata" : $instance["post_meta_title"];
+			$hide_title = is_home() || $empty_title;
+
+			if ($hide_title) {
+				$args["before_title"] = str_replace("widget-header", "widget-header visuallyhidden", $args["before_title"]);
+			}
+
 			$widget  = sprintf("%s %s %s %s %s %s", $args["before_widget"], $args["before_title"],
 				$instance["post_meta_title"], $args["after_title"], $display, $args["after_widget"]);
-
 		}
-		
-		
+
 		echo $widget;
 	}
 
