@@ -43,12 +43,21 @@ class dashifen_post_meta_widget extends WP_Widget {
 				$post_tags  = wp_get_post_terms($post->ID, "post_tag");
 
 				if (!is_wp_error($categories) && sizeof($categories) > 0) {
-					$category = array_shift($categories); ?>
-					<li class="category">
-						<i class="fa fa-fw fa-folder-open" aria-hidden="true" title="Categorized"></i>
-						<?= sprintf($format, get_term_link($category, "category"), ucwords($category->name)) ?>
-					</li>
-				<?php }
+					foreach ($categories as $i => $category) {
+						if ($category->name == "0011") {
+							unset ($categories[$i]);
+						} else {
+							$categories[$i] = sprintf($format, get_term_link($category, "category"), strtolower($category->name));
+						}
+					}
+
+					if (sizeof($categories) > 0) { ?>
+						<li class="category">
+							<i class="fa fa-fw fa-folder-open" aria-hidden="true" title="Categorized"></i>
+							<ul class="oxford"><li><?= join("</li><li>", $categories) ?></li></ul>
+						</li>
+					<?php }
+				}
 
 				if (!is_wp_error($post_tags) && sizeof($post_tags) > 0) {
 					foreach ($post_tags as $i => $tag) {
